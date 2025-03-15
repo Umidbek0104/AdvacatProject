@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('experts', function (Blueprint $table) {
+        Schema::create('litsen_special_create', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('litsensiya_id')->constrained();
+            $table->foreignId('specialization_id')->constrained();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('specialization')->nullable();
-            $table->string('experience');
-            $table->decimal('rating', 3, 2)->default(0.00);
-            $table->string('bio')->nullable();
-            $table->foreignId('litsensiya_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('experts');
+        Schema::dropIfExists('litsen_special_create');
     }
 };

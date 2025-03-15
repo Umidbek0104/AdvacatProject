@@ -22,6 +22,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'phone' => $this->faker->phoneNumber(),
             'password' => Hash::make('password'), // default parol
             'role_id' => $this->faker->randomElement([1, 2, 3, 4]), // 1-Admin, 2-Expert, 3-Moderator, 4-Client
             'remember_token' => Str::random(10),

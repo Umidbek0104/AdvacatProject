@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AppointmentController;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ClientController;
 use App\Http\Controllers\API\ExpertController;
 use App\Http\Controllers\API\QueueController;
@@ -31,3 +32,11 @@ Route::apiResources([
     'reviews' => ReviewController::class,
     'roles' => RoleController::class,
 ]);
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+    });
+});

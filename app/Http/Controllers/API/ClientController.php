@@ -40,6 +40,6 @@ class ClientController extends Controller
     public function destroy($id): JsonResponse
     {
         Client::destroy($id);
-        return response()->json(null, 204);
+        return response()->json('success', 204);
     }
 }
