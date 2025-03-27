@@ -70,4 +70,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Client::class);
     }
+    public function litsensiya()
+    {
+        $this->hasMany(Litsensiya::class);
+    }
 }

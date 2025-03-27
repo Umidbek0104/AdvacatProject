@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Expert;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ExpertController extends Controller
 {
@@ -43,4 +44,6 @@ class ExpertController extends Controller
         Expert::destroy($id);
         return response()->json(null, 204);
     }
+
+
 }

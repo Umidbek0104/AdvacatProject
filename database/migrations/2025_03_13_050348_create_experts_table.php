@@ -14,13 +14,21 @@ return new class extends Migration
         Schema::create('experts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('specialization')->nullable();
+            $table->foreignId('specialization')->nullable()->constrained();
             $table->string('experience');
             $table->decimal('rating', 3, 2)->default(0.00);
             $table->string('bio')->nullable();
-            $table->foreignId('litsensiya_id')->nullable()->constrained();
+
+            // Foreign key
+            $table->unsignedBigInteger('litsensiya_id')->nullable();
+            $table->foreign('litsensiya_id')
+                ->references('id')
+                ->on('litsensiyas')
+                ->onDelete('SET NULL'); // o‘chirilganda NULL bo‘lishi kerak
+
             $table->timestamps();
         });
+
     }
 
     /**

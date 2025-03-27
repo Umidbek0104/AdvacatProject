@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('litsensiyas', function (Blueprint $table) {
-            $table->id();
-            $table->integer('uzrotl_id');
-            $table->string('status');
+            $table->id(); // bigIncrements bo'lib avtomatik unsigned bo'ladi
+            $table->string('name');
             $table->timestamps();
         });
     }

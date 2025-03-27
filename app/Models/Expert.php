@@ -14,6 +14,7 @@ class Expert extends Model
         'user_id',
         'specialization',
         'experience',
+        'license_number',
     ];
 
     public function user(): BelongsTo

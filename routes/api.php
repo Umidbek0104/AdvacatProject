@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AdminPageController;
 use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ClientController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\API\ExpertController;
 use App\Http\Controllers\API\QueueController;
 use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,3 +42,9 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
+Route::get('/dashboard', [AdminPageController::class, 'index']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('submit/profile', [UserController::class, 'submitProfile']);
+});
+Route::post('/submit-profile', [UserController::class, 'store']);

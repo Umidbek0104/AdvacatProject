@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\Litsensiya;
-use App\Http\Requests\StoreLitsensiyaRequest;
-use App\Http\Requests\UpdateLitsensiyaRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSpecializationRequest;
+use App\Http\Requests\UpdateSpecializationRequest;
+use App\Models\Specialization;
 
-class LitsensiyaController extends Controller
+class SpecializationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +28,7 @@ class LitsensiyaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreLitsensiyaRequest $request)
+    public function store(StoreSpecializationRequest $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class LitsensiyaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Litsensiya $litsensiya)
+    public function show(Specialization $specialization)
     {
         //
     }
@@ -43,7 +44,7 @@ class LitsensiyaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Litsensiya $litsensiya)
+    public function edit(Specialization $specialization)
     {
         //
     }
@@ -51,7 +52,7 @@ class LitsensiyaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLitsensiyaRequest $request, Litsensiya $litsensiya)
+    public function update(UpdateSpecializationRequest $request, Specialization $specialization)
     {
         //
     }
@@ -59,7 +60,7 @@ class LitsensiyaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Litsensiya $litsensiya)
+    public function destroy(Specialization $specialization)
     {
         //
     }
