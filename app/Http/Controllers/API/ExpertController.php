@@ -15,8 +15,8 @@ class ExpertController extends Controller
     {
         $experts =User::all();
         $guards=[
-            'advacat'=>$experts->where('role','advacat'),
-            'natarius'=>$experts->where('role','natarius'),
+            'advacat'=>$experts->where('role_id','2'),
+            'natarius'=>$experts->where('role_id','3'),
         ];
         return response()->json($guards);
     }

@@ -40,7 +40,7 @@ class ExpertSeeder extends Seeder
                 'user_id' => $user->id,
                 'specialization' => 2,
                 'experience' => '10 yil',
-                'rating' => 4.5,
+                'rating' => 4.8,
                 'bio' => 'Natarius sifatida 10 yillik tajribam bor.',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
