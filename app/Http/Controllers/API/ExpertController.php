@@ -12,7 +12,12 @@ class ExpertController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(Expert::all(), 200);
+        $experts = Expert::all();
+        $guards=[
+            'advacat'=>$experts->where('role','advacat'),
+            'natarius'=>$experts->where('role','natarius'),
+        ];
+        return response()->json($guards);
     }
 
     public function store(Request $request): JsonResponse
