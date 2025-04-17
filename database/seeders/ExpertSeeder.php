@@ -18,10 +18,10 @@ class ExpertSeeder extends Seeder
     public function run(): void
     {
         $users = [
-            ['name' => 'User 1', 'email' => 'user1@example.com', 'password' => bcrypt('password'), 'role_id' => 2, 'phone' => '998901234561'],
-            ['name' => 'User 2', 'email' => 'user2@example.com', 'password' => bcrypt('password'), 'role_id' => 2, 'phone' => '998901234562'],
-            ['name' => 'User 3', 'email' => 'user3@example.com', 'password' => bcrypt('password'), 'role_id' => 2, 'phone' => '998901234563'],
-            ['name' => 'User 4', 'email' => 'user4@example.com', 'password' => bcrypt('password'), 'role_id' => 2, 'phone' => '998901234564'],
+            ['name' => 'User 1', 'email' => 'user1@example.com', 'password' => bcrypt('password'), 'role_id' => 4, 'phone' => '998901234561'],
+            ['name' => 'User 2', 'email' => 'user2@example.com', 'password' => bcrypt('password'), 'role_id' => 4, 'phone' => '998901234562'],
+            ['name' => 'User 3', 'email' => 'user3@example.com', 'password' => bcrypt('password'), 'role_id' => 4, 'phone' => '998901234563'],
+            ['name' => 'User 4', 'email' => 'user4@example.com', 'password' => bcrypt('password'), 'role_id' => 4, 'phone' => '998901234564'],
         ];
         foreach ($users as $userData) {
             $user = User::create($userData);
@@ -33,6 +33,15 @@ class ExpertSeeder extends Seeder
                 'experience' => '10 yil',
                 'rating' => 4.5,
                 'bio' => 'Advokat sifatida 10 yillik tajribam bor.',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+            Expert::create([
+                'user_id' => $user->id,
+                'specialization' => 2,
+                'experience' => '10 yil',
+                'rating' => 4.5,
+                'bio' => 'Natarius sifatida 10 yillik tajribam bor.',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);

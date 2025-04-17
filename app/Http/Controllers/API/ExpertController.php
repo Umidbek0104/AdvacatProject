@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Expert;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +13,7 @@ class ExpertController extends Controller
 {
     public function index(): JsonResponse
     {
-        $experts = Expert::all();
+        $experts =User::all();
         $guards=[
             'advacat'=>$experts->where('role','advacat'),
             'natarius'=>$experts->where('role','natarius'),
