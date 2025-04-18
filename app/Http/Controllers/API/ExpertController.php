@@ -13,10 +13,28 @@ class ExpertController extends Controller
 {
     public function index(): JsonResponse
     {
-        $users = User::whereIn('role_id', [2, 3])->get();
+        $perPage = 15;
+        $experts = Expert::with('user')->paginate($perPage);
+
+        $formattedData = $experts->map(function ($expert) {
+            return [
+                'name' => $expert->user->name ?? null,
+                'role' => $expert->user->role->name ?? null,
+                'specialization' => $expert->specialization,
+                'experience' => $expert->experience,
+                'rating' => $expert->rating,
+                'bio' => $expert->bio,
+                'created_at' => $expert->created_at->format('Y-m-d H:i:s'),
+            ];
+        });
 
         return response()->json([
-            'data' => $users
+            'success' => true,
+            'message' => 'Foydalanuvchilar muvaffaqiyatli olindi',
+            'data' => $formattedData,
+            'page' => $experts->currentPage(),
+            'per_page' => $experts->perPage(),
+            'total' => $experts->total(),
         ]);
     }
 
