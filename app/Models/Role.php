@@ -10,8 +10,8 @@ class Role extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
-    public function users(): HasMany
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 }
