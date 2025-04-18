@@ -12,13 +12,16 @@ use Illuminate\Support\Facades\Validator;
 class ExpertController extends Controller
 {
     public function index(): JsonResponse
-    {    $perPage = 15;
+    {
+        $perPage = 1;
 
         // User va Role ma’lumotlarini birga yuklaydi
         $experts = Expert::with(['user.role'])->paginate($perPage);
 
-        // Har bir ekspertni kerakli formatga o‘zgartiramiz
-        $formattedData = $experts->map(function ($expert) {
+        // Ma’lumotlarni kerakli formatga o‘zgartiramiz
+        $formattedData = $experts->items(); // paginate'dan to‘g‘ridan-to‘g‘ri itemlar
+
+        $formattedData = array_map(function ($expert) {
             return [
                 'name' => $expert->user->name ?? null,
                 'role' => $expert->user->role->name ?? null,
@@ -28,7 +31,7 @@ class ExpertController extends Controller
                 'bio' => $expert->bio,
                 'created_at' => optional($expert->created_at)->format('Y-m-d H:i:s'),
             ];
-        });
+        }, $formattedData);
 
         return response()->json([
             'success' => true,
