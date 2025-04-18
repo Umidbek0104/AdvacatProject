@@ -26,16 +26,24 @@ class ExpertController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        // Foydalanuvchini topamiz
+        // Foydalanuvchini bazadan olib kelamiz
         $user = User::find($request->user_id);
 
-        // Faqatgina role_id 2 yoki 3 bo‘lsa, Expert jadvaliga qo‘shamiz
-        if (in_array($user->role_id, [2, 3])) {
-            $expert = Expert::create($request->all());
-            return response()->json(['success' => true, 'data' => $expert], 201);
-        } else {
+        // 1. Role_id tekshiriladi (faqat 2 yoki 3 bo‘lsa davom etadi)
+        if (!in_array($user->role_id, [2, 3])) {
             return response()->json(['error' => 'Foydalanuvchi advokat yoki notarius emas'], 403);
         }
+
+        // 2. Oldin shu user_id bilan Expert mavjud emasligini tekshiramiz
+        $existing = Expert::where('user_id', $user->id)->first();
+        if ($existing) {
+            return response()->json(['error' => 'Bu foydalanuvchi allaqachon Expert ro‘yxatida mavjud'], 409);
+        }
+
+        // 3. Expert yaratish
+        $expert = Expert::create($request->all());
+
+        return response()->json(['success' => true, 'data' => $expert], 201);
     }
 
     public function show($id): JsonResponse
