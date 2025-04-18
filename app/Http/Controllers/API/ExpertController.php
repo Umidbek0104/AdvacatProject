@@ -25,10 +25,17 @@ class ExpertController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
-//        $expert = Expert::create($request->all());
-//        return response()->json(['success' => true, 'data' => $expert], 201);
-        $expert = Expert::create($request->all());
-        return response()->json($expert, 201);
+
+        // Foydalanuvchini topamiz
+        $user = User::find($request->user_id);
+
+        // Faqatgina role_id 2 yoki 3 bo‘lsa, Expert jadvaliga qo‘shamiz
+        if (in_array($user->role_id, [2, 3])) {
+            $expert = Expert::create($request->all());
+            return response()->json(['success' => true, 'data' => $expert], 201);
+        } else {
+            return response()->json(['error' => 'Foydalanuvchi advokat yoki notarius emas'], 403);
+        }
     }
 
     public function show($id): JsonResponse
