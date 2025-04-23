@@ -11,20 +11,70 @@ class AppointmentController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(Appointment::all(), 200);
+        $perPage = 15;
+
+        // Ehtimoliy bog‘liqliklar bo‘lsa, with() orqali yuklab olish mumkin
+        $appointments = Appointment::with(['user', 'expert.user']) // agar bog'langan bo'lsa
+        ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        $formattedData = $appointments->map(function ($appointment) {
+            return [
+                'id' => $appointment->id,
+                'user_name' => $appointment->user->name ?? null,
+                'expert_name' => $appointment->expert->user->name ?? null,
+                'date' => $appointment->date ?? null,
+                'time' => $appointment->time ?? null,
+                'status' => $appointment->status ?? 'pending', // status maydoni mavjud bo‘lsa
+                'created_at' => optional($appointment->created_at)->format('Y-m-d H:i:s'),
+            ];
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Uchrashuvlar muvaffaqiyatli olindi',
+            'data' => $formattedData,
+            'page' => $appointments->currentPage(),
+            'per_page' => $appointments->perPage(),
+            'total' => $appointments->total(),
+        ], 200);
     }
 
     public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'expert_id' => 'required|exists:experts,id',
-            'date' => 'required|date',
-        ]);
+        try {
+            // 1. Ma'lumotlarni tekshirish
+            $validatedData = $request->validate([
+                'client_id' => 'required|exists:clients,id',
+                'expert_id' => 'required|exists:experts,id',
+                'date'      => 'required|date',
+                'time'      => 'nullable|date_format:H:i:s',
+                'status'    => 'nullable|string',
+            ]);
 
-        $appointment = Appointment::create($request->all());
+            // 2. Appointmentni yaratish
+            $appointment = Appointment::create($validatedData);
 
-        return response()->json($appointment, 201);
+            // 3. JSON responsni yuborish
+            return response()->json([
+                'success' => true,
+                'message' => 'Appointment created successfully.',
+                'submitted_data' => $validatedData,
+                'created_appointment' => $appointment,
+            ], 201); // 201 - Created
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validatsiya xatoliklari mavjud.',
+                'errors' => $e->errors(),
+            ], 422); // 422 - Unprocessable Entity
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server xatosi: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function show($id): JsonResponse

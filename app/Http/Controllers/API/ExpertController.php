@@ -54,7 +54,7 @@ class ExpertController extends Controller
         $user = User::find($request->user_id);
 
         // 1. Role_id tekshiriladi (faqat 2 yoki 3 bo‘lsa davom etadi)
-        if (!in_array($user->role_id, [2, 3])) {
+        if (!in_array($request->role_id, [2, 3])) {
             return response()->json(['error' => 'Foydalanuvchi advokat yoki notarius emas'], 403);
         }
 
