@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('queues', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained();
-            $table->foreignId('expert_id');
+            $table->foreignId('client_id')->constrained('clients');
+            $table->foreignId('expert_id')->constrained('experts');
             $table->integer('position')->default(1);
             $table->string('status');
             $table->timestamps();
