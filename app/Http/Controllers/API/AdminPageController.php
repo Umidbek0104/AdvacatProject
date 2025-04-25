@@ -40,7 +40,7 @@ class AdminPageController extends Controller
      */
     public function approveProfile($id): JsonResponse
     {
-        $user = User::find($id);
+        $user = User::find($id); // bu null bo'lishi mumkin
 
         if (!$user) {
             return response()->json([
@@ -49,7 +49,7 @@ class AdminPageController extends Controller
             ], 404);
         }
 
-        $user->status = 'approved';
+        $user->status = 'approved'; // AGAR status ustuni yo'q bo‘lsa: 500 error!
         $user->save();
 
         return response()->json([
@@ -58,7 +58,6 @@ class AdminPageController extends Controller
             'data' => $user
         ]);
     }
-
     /**
      * Admin foydalanuvchini rad etadi.
      */

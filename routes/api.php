@@ -34,6 +34,8 @@ Route::apiResources([
     'reviews' => ReviewController::class,
     'roles' => RoleController::class,
 ]);
+
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -47,4 +49,12 @@ Route::get('/dashboard', [AdminPageController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('submit/profile', [UserController::class, 'submitProfile']);
 });
+
+
 Route::post('/submit-profile', [UserController::class, 'store']);
+Route::get('/admin/index',[AdminPageController::class,'index']);
+Route::prefix('admin')->group(function () {
+    Route::get('/users/pending', [AdminPageController::class, 'pendingProfiles']);
+    Route::post('/users/{id}/approve', [AdminPageController::class, 'approveProfile']);
+    Route::post('/users/{id}/reject', [AdminPageController::class, 'rejectProfile']);
+});
