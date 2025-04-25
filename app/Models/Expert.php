@@ -11,11 +11,12 @@ class Expert extends Model
 {
     use HasFactory;
     protected $fillable = [
-
+        'user_id',
         'specialization',
         'experience',
         'rating',
-        'bio'
+        'bio',
+        'litsensiya_id',
     ];
 
     public function user(): BelongsTo

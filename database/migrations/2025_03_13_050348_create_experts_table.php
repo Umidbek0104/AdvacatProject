@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('experience');
             $table->decimal('rating', 3, 2)->default(0.00);
             $table->string('bio')->nullable();
-
             // Foreign key
             $table->unsignedBigInteger('litsensiya_id')->nullable();
             $table->foreign('litsensiya_id')

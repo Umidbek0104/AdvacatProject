@@ -5,9 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Expert;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ExpertController extends Controller
 {
@@ -23,6 +23,7 @@ class ExpertController extends Controller
 
         $formattedData = array_map(function ($expert) {
             return [
+                'id' => $expert->id,  // Add ID to the response
                 'name' => $expert->user->name ?? null,
                 'role' => $expert->user->role->name ?? null,
                 'specialization' => $expert->specialization,
@@ -41,13 +42,13 @@ class ExpertController extends Controller
             'per_page' => $experts->perPage(),
             'total' => $experts->total(),
         ]);
-
     }
 
     public function store(Request $request): JsonResponse
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
+            'role_id' => 'required|exists:roles,id', // `role_id` ni validate qilish
         ]);
 
         // Foydalanuvchini bazadan olib kelamiz
@@ -72,22 +73,67 @@ class ExpertController extends Controller
 
     public function show($id): JsonResponse
     {
-        return response()->json(Expert::findOrFail($id), 200);
+        $expert = Expert::with('user.role')->findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $expert->id,
+                'user_id' => $expert->user_id,
+                'specialization' => $expert->specialization,
+                'experience' => $expert->experience,
+                'rating' => $expert->rating,
+                'bio' => $expert->bio,
+                'litsensiya_id' => $expert->litsensiya_id,
+                'role_id' => $expert->role_id, // role_id ni qo'shish
+            ]
+        ], 200);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        $expert = Expert::findOrFail($id);
-        $expert->update($request->all());
+        // Validatsiya
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role_id' => 'required|exists:roles,id', // `role_id`ni tekshirish
+            'specialization' => 'nullable|exists:specializations,id',
+            'experience' => 'required|string',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'bio' => 'nullable|string',
+            'litsensiya_id' => 'nullable|exists:litsensiyas,id',
+        ]);
 
-        return response()->json($expert, 200);
+        // Expertni topamiz
+        $expert = Expert::findOrFail($id);
+
+        // Yangilash
+        $expert->update($validated);
+
+        // To‘liq ma’lumotlarni yuklaymiz (agar user bilan bog‘liq bo‘lsa)
+        $expert->load('user.role');
+
+        // Javobga expertning barcha ustunlarini yuboramiz
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $expert->id,
+                'user_id' => $expert->user_id,
+                'specialization' => $expert->specialization,
+                'experience' => $expert->experience,
+                'rating' => $expert->rating,
+                'bio' => $expert->bio,
+                'litsensiya_id' => $expert->litsensiya_id,
+                'role_id' => $expert->role_id, // `role_id` ni qo'shish
+            ]
+        ], 200);
     }
 
     public function destroy($id): JsonResponse
     {
         Expert::destroy($id);
-        return response()->json(null, 204);
+        return response()->json([
+            'success' => true,
+            'message' => 'Expert muvaffaqiyatli o‘chirildi',
+            'id' => $id
+        ], 204);
     }
-
-
 }

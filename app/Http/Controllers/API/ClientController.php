@@ -21,25 +21,47 @@ class ClientController extends Controller
         ]);
 
         $client = Client::create($request->all());
-        return response()->json($client, 201);
+        return response()->json([
+            'success' => true,
+            'data' => $client,
+        ], 201);
     }
 
     public function show($id): JsonResponse
     {
-        return response()->json(Client::findOrFail($id), 200);
+        $client = Client::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => $client,
+            'id' => $id,  // IDni qo'shish
+        ], 200);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
         $client = Client::findOrFail($id);
-        $client->update($request->all());
 
-        return response()->json($client, 200);
+        // Validatsiya (agarda zarur bo'lsa)
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $client->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $client,
+            'id' => $id,  // IDni qo'shish
+        ], 200);
     }
 
     public function destroy($id): JsonResponse
     {
         Client::destroy($id);
-        return response()->json('success', 204);
+        return response()->json([
+            'success' => true,
+            'message' => 'Client successfully deleted',
+            'id' => $id,  // IDni qo'shish
+        ], 204);
     }
 }
